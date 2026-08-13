@@ -1,82 +1,126 @@
 "use client";
-import { useState } from "react";
+import { saveNote, fetchNotes } from "@/lib/api/notesApi";
+import { useNoteStore } from "@/lib/store/noteStore";
+import { useDebouncedCallback } from "use-debounce";
+import { useEffect } from "react";
+import LogoutButton from "@/components/LogoutButton";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { translations } from "@/lib/i18n";
+import { useSettingsStore } from "@/lib/store/settingsStore";
+
 const week = [
   {
     day: "ПОНЕДІЛОК",
-    date: "10 серпня",
+    date: "2026-08-10",
   },
   {
     day: "ВІВТОРОК",
-    date: "11 серпня",
+    date: "2026-08-11",
   },
   {
     day: "СЕРЕДА",
-    date: "12 серпня",
+    date: "2026-08-12",
   },
   {
     day: "ЧЕТВЕР",
-    date: "13 серпня",
+    date: "2026-08-13",
   },
   {
     day: "П'ЯТНИЦЯ",
-    date: "14 серпня",
+    date: "2026-08-14",
   },
   {
     day: "СУБОТА",
-    date: "15 серпня",
+    date: "2026-08-15",
   },
   {
     day: "НЕДІЛЯ",
-    date: "16 серпня",
+    date: "2026-08-16",
   },
 ];
 
-const getSavedNotes = () => {
-  if (typeof window === "undefined") {
-    return [];
-  }
-
-  const savedNotes = localStorage.getItem("notebook-notes");
-
-  return savedNotes ? JSON.parse(savedNotes) : [];
-};
-
 export default function Home() {
-  const [notes, setNotes] = useState<string[]>(getSavedNotes);
+  const language = useSettingsStore((state) => state.language);
+  const notes = useNoteStore((state) => state.notes);
+  const setNote = useNoteStore((state) => state.setNote);
+  const setNotes = useNoteStore((state) => state.setNotes);
 
-  const handleChange = (index: number, value: string) => {
-    const updatedNotes = [...notes];
+  useEffect(() => {
+    const loadNotes = async () => {
+      try {
+        const data = await fetchNotes();
 
-    updatedNotes[index] = value;
+        setNotes(
+          data.map((note) => ({
+            day: note.day,
+            line: note.line,
+            text: note.text,
+          })),
+        );
+      } catch (error) {
+        console.error("Не вдалося завантажити записи:", error);
+      }
+    };
 
-    setNotes(updatedNotes);
+    loadNotes();
+  }, [setNotes]);
 
-    localStorage.setItem("notebook-notes", JSON.stringify(updatedNotes));
-  };
-  let inputIndex = 0;
+  const saveNoteToDatabase = useDebouncedCallback(
+    async (day: string, line: number, text: string) => {
+      try {
+        await saveNote(day, line, text);
+      } catch (error) {
+        console.error("Не вдалося зберегти запис:", error);
+      }
+    },
+    500,
+  );
 
   return (
     <main className="notebook">
+      <LanguageSwitcher />
+      <LogoutButton />
       <div className="week">
-        {week.map((item, index) => {
-          const lines = index === 6 ? 4 : 6;
+        {week.map((item, dayIndex) => {
+          const dateKey = item.date;
+          const lines = dayIndex === 6 ? 4 : 6;
           return (
             <section className="day" key={item.day}>
-              <h1>{item.day}</h1>
-              <p className="date">{item.date}</p>
+              <h1>{translations[language].days[dayIndex]}</h1>
+
+              <p className="date">
+                {" "}
+                {new Date(item.date).toLocaleDateString(
+                  language === "uk" ? "uk-UA" : "en-US",
+                  {
+                    day: "numeric",
+                    month: "long",
+                  },
+                )}
+              </p>
 
               <div className="writing-lines">
                 {Array.from({ length: lines }).map((_, lineIndex) => {
-                  const currentIndex = inputIndex++;
+                  const line = lineIndex + 1;
+
+                  const note = notes.find(
+                    (item) =>
+                      item &&
+                      item.day === week[dayIndex].date &&
+                      item.line === line,
+                  );
                   return (
                     <input
-                      key={lineIndex}
+                      key={line}
                       type="text"
                       className="writing-line"
-                      value={notes[currentIndex] || ""}
-                      onChange={(event) =>
-                        handleChange(currentIndex, event.target.value)
-                      }
+                      value={note?.text || ""}
+                      onChange={(event) => {
+                        const text = event.target.value;
+                        setNote(dateKey, line, text);
+
+                        saveNoteToDatabase(dateKey, line, text);
+                      }}
                     />
                   );
                 })}
