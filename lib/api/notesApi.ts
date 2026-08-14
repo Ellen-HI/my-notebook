@@ -56,3 +56,26 @@ export async function saveNote(day: string, line: number, text: string) {
 
   return data as Note;
 }
+
+export async function deleteNote(day: string, line: number) {
+  const supabase = createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("Користувач не авторизований");
+  }
+
+  const { error } = await supabase
+    .from("notes")
+    .delete()
+    .eq("user_id", user.id)
+    .eq("day", day)
+    .eq("line", line);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}

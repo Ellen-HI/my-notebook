@@ -11,12 +11,14 @@ export const translations = {
     ],
 
     auth: {
-      signIn: "Увійти",
+      toSignUp: "Зареєструватися",
+      toSignIn: "Вхід",
+      signIn: "Вхід",
       signUp: "Зареєструватися",
       logout: "Вийти",
       email: "Email",
       password: "Пароль",
-      signInWithGoogle: "Увійти через Google",
+      signInWithGoogle: "Вхід через Google",
       registrationSuccess: "Реєстрація успішна! Перевір свою електронну пошту.",
     },
   },
@@ -33,6 +35,8 @@ export const translations = {
     ],
 
     auth: {
+      toSignUp: "Sign up",
+      toSignIn: "Sign in",
       signIn: "Sign in",
       signUp: "Sign up",
       logout: "Log out",

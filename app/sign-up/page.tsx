@@ -2,8 +2,13 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { translations } from "@/lib/i18n";
+import { useSettingsStore } from "@/lib/store/settingsStore";
+import Link from "next/link";
 
 export default function SignUpPage() {
+  const language = useSettingsStore((state) => state.language);
+  const t = translations[language].auth;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -23,17 +28,17 @@ export default function SignUpPage() {
       return;
     }
 
-    setMessage("Реєстрація успішна! Перевір свою електронну пошту.");
+    setMessage(t.registrationSuccess);
   };
 
   return (
-    <main>
-      <h1>Реєстрація</h1>
+    <main className="auth-page">
+      <h1>{t.signUp}</h1>
 
-      <form onSubmit={handleSignUp}>
+      <form onSubmit={handleSignUp} className="auth-form">
         <input
           type="email"
-          placeholder="Email"
+          placeholder={t.email}
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           required
@@ -41,16 +46,21 @@ export default function SignUpPage() {
 
         <input
           type="password"
-          placeholder="Пароль"
+          placeholder={t.password}
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           required
           minLength={6}
         />
 
-        <button type="submit">Зареєструватися</button>
+        <button className="auth-button" type="submit">
+          {t.signUp}
+        </button>
       </form>
-
+      <p className="auth-switch">
+        {language === "uk" ? "Вже маєте акаунт?" : "Already have an account?"}{" "}
+        <Link href="/sign-in">{t.toSignIn}</Link>
+      </p>
       {message && <p>{message}</p>}
     </main>
   );

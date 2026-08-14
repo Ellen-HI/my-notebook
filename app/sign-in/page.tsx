@@ -3,10 +3,13 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
-// import { translations } from "@/lib/i18n";
-// import { useSettingsStore } from "@/lib/store/settingsStore";
+import { translations } from "@/lib/i18n";
+import { useSettingsStore } from "@/lib/store/settingsStore";
+import Link from "next/link";
 
 export default function SignInPage() {
+  const language = useSettingsStore((state) => state.language);
+  const t = translations[language].auth;
   const router = useRouter();
   const supabase = createClient();
   const [email, setEmail] = useState("");
@@ -45,13 +48,13 @@ export default function SignInPage() {
     }
   };
   return (
-    <main>
-      <h1>Вхід</h1>
+    <main className="auth-page">
+      <h1>{t.signIn}</h1>
 
-      <form onSubmit={handleSignIn}>
+      <form onSubmit={handleSignIn} className="auth-form">
         <input
           type="email"
-          placeholder="Email"
+          placeholder={t.email}
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           required
@@ -59,17 +62,26 @@ export default function SignInPage() {
 
         <input
           type="password"
-          placeholder="Пароль"
+          placeholder={t.password}
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           required
         />
-
-        <button type="button" onClick={handleGoogleSignIn}>
-          Увійти через Google
+        <button className="auth-button" type="submit">
+          {t.signIn}
+        </button>
+        <button
+          className="auth-button google-button"
+          type="button"
+          onClick={handleGoogleSignIn}
+        >
+          {t.signInWithGoogle}
         </button>
       </form>
-
+      <p className="auth-switch">
+        {language === "uk" ? "Немає акаунта?" : "Don't have an account?"}{" "}
+        <Link href="/sign-up">{t.toSignUp}</Link>
+      </p>
       {message && <p>{message}</p>}
     </main>
   );
