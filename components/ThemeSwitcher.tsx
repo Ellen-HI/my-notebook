@@ -13,7 +13,13 @@ export default function ThemeSwitcher() {
         onClick={() => setTheme("light")}
         disabled={theme === "light"}
       >
-        <Image src="/sun.svg" alt="Світла тема" width={40} height={40} />
+        <Image
+          src="/sun.svg"
+          alt="Світла тема"
+          width={40}
+          height={40}
+          loading="eager"
+        />
       </button>
 
       <button
@@ -21,7 +27,13 @@ export default function ThemeSwitcher() {
         onClick={() => setTheme("dark")}
         disabled={theme === "dark"}
       >
-        <Image src="/moon.svg" alt="Темна тема" width={40} height={40} />
+        <Image
+          src="/moon.svg"
+          alt="Темна тема"
+          width={40}
+          height={40}
+          loading="eager"
+        />
       </button>
     </div>
   );
