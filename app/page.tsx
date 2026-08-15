@@ -1,8 +1,8 @@
 "use client";
 import { saveNote, fetchNotes, deleteNote } from "@/lib/api/notesApi";
-import { useNoteStore } from "@/lib/store/noteStore";
+import { selectNote, useNoteStore } from "@/lib/store/noteStore";
 import { useDebouncedCallback } from "use-debounce";
-import { forwardRef, useEffect } from "react";
+import { forwardRef, useEffect, useRef } from "react";
 import LogoutButton from "@/components/LogoutButton";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { translations } from "@/lib/i18n";
@@ -36,7 +36,7 @@ const getWeek = (weekOffset: number) => {
     };
   });
 };
-const weekOffsets = Array.from({ length: 105 }, (_, index) => index - 52);
+const weekOffsets = Array.from({ length: 25 }, (_, index) => index - 12);
 
 const Page = forwardRef<HTMLDivElement, { children: React.ReactNode }>(
   ({ children }, ref) => (
@@ -48,9 +48,58 @@ const Page = forwardRef<HTMLDivElement, { children: React.ReactNode }>(
 
 Page.displayName = "Page";
 
+type FlipBookApi = {
+  pageFlip: () => {
+    update: () => void;
+  };
+};
+
+type SaveNoteFn = ((day: string, line: number, text: string) => void) & {
+  cancel: () => void;
+};
+function NoteInput({
+  dateKey,
+  line,
+  setNote,
+  saveNoteToDatabase,
+}: {
+  dateKey: string;
+  line: number;
+  setNote: (day: string, line: number, text: string) => void;
+  saveNoteToDatabase: SaveNoteFn;
+}) {
+  const note = useNoteStore(selectNote(dateKey, line));
+
+  return (
+    <input
+      type="text"
+      className="writing-line"
+      defaultValue={note?.text ?? ""}
+      onChange={(event) => {
+        const text = event.target.value;
+        setNote(dateKey, line, text);
+        if (text.trim()) {
+          saveNoteToDatabase(dateKey, line, text);
+        }
+      }}
+      onBlur={(event) => {
+        const text = event.target.value;
+
+        if (!text.trim()) {
+          saveNoteToDatabase.cancel();
+
+          deleteNote(dateKey, line).catch((error) => {
+            console.error("Не вдалося видалити запис:", error);
+          });
+        }
+      }}
+    />
+  );
+}
+
 export default function Home() {
+  const flipBookRef = useRef<FlipBookApi | null>(null);
   const language = useSettingsStore((state) => state.language);
-  const notes = useNoteStore((state) => state.notes);
   const setNote = useNoteStore((state) => state.setNote);
   const setNotes = useNoteStore((state) => state.setNotes);
 
@@ -58,14 +107,7 @@ export default function Home() {
     const loadNotes = async () => {
       try {
         const data = await fetchNotes();
-
-        setNotes(
-          data.map((note) => ({
-            day: note.day,
-            line: note.line,
-            text: note.text,
-          })),
-        );
+        setNotes(data);
       } catch (error) {
         console.error("Не вдалося завантажити записи:", error);
       }
@@ -73,6 +115,23 @@ export default function Home() {
 
     loadNotes();
   }, [setNotes]);
+
+  useEffect(() => {
+    const updateBook = () => {
+      flipBookRef.current?.pageFlip()?.update();
+    };
+
+    const timer = window.setTimeout(updateBook, 100);
+
+    window.addEventListener("orientationchange", updateBook);
+    window.addEventListener("resize", updateBook);
+
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("orientationchange", updateBook);
+      window.removeEventListener("resize", updateBook);
+    };
+  }, []);
 
   const saveNoteToDatabase = useDebouncedCallback(
     async (day: string, line: number, text: string) => {
@@ -95,28 +154,28 @@ export default function Home() {
 
       <HTMLFlipBook
         className="flip-book"
-        style={{}}
+        ref={flipBookRef}
         width={500}
-        height={900}
+        height={1100}
         size="stretch"
-        minWidth={300}
-        maxWidth={500}
-        minHeight={540}
-        maxHeight={1200}
-        startPage={52}
+        minWidth={500}
+        maxWidth={700}
+        minHeight={780}
+        maxHeight={1540}
+        startPage={12}
         startZIndex={0}
         showCover={false}
         usePortrait={true}
+        autoSize={true}
         mobileScrollSupport={true}
         clickEventForward={false}
         useMouseEvents={true}
-        swipeDistance={30}
+        swipeDistance={18}
         showPageCorners={true}
         disableFlipByClick={false}
         drawShadow={true}
         maxShadowOpacity={0.35}
-        flippingTime={900}
-        autoSize={true}
+        flippingTime={450}
       >
         {weekOffsets.map((offset) => {
           const week = getWeek(offset);
@@ -142,44 +201,21 @@ export default function Home() {
                         )}
                       </p>
 
-                      <div className="writing-lines">
-                        {Array.from({ length: lines }).map((_, lineIndex) => {
-                          const line = lineIndex + 1;
-
-                          const note = notes.find(
-                            (item) =>
-                              item &&
-                              item.day === dateKey &&
-                              item.line === line,
-                          );
-
-                          return (
-                            <input
-                              key={line}
-                              type="text"
-                              className="writing-line"
-                              value={note?.text || ""}
-                              onChange={(event) => {
-                                const text = event.target.value;
-
-                                setNote(dateKey, line, text);
-
-                                if (text.trim() === "") {
-                                  deleteNote(dateKey, line).catch((error) => {
-                                    console.error(
-                                      "Не вдалося видалити запис:",
-                                      error,
-                                    );
-                                  });
-
-                                  return;
-                                }
-
-                                saveNoteToDatabase(dateKey, line, text);
-                              }}
-                            />
-                          );
-                        })}
+                      <div
+                        className="writing-lines"
+                        onMouseDownCapture={(event) => event.stopPropagation()}
+                        onTouchStartCapture={(event) => event.stopPropagation()}
+                        onTouchMoveCapture={(event) => event.stopPropagation()}
+                      >
+                        {Array.from({ length: lines }).map((_, lineIndex) => (
+                          <NoteInput
+                            key={lineIndex + 1}
+                            dateKey={dateKey}
+                            line={lineIndex + 1}
+                            setNote={setNote}
+                            saveNoteToDatabase={saveNoteToDatabase}
+                          />
+                        ))}
                       </div>
                     </section>
                   );

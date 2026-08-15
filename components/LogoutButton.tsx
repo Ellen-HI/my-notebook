@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useSettingsStore } from "@/lib/store/settingsStore";
 import { translations } from "@/lib/i18n";
+import { clearUserIdCache } from "@/lib/api/notesApi";
 
 export default function LogoutButton() {
   const language = useSettingsStore((state) => state.language);
@@ -12,7 +13,7 @@ export default function LogoutButton() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-
+    clearUserIdCache();
     router.replace("/sign-in");
     router.refresh();
   };
