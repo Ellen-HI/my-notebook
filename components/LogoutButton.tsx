@@ -19,7 +19,11 @@ export default function LogoutButton() {
   };
 
   return (
-    <button type="button" onClick={handleLogout}>
+    <button
+      type="button"
+      className="auth-button logout-button"
+      onClick={handleLogout}
+    >
       {translations[language].auth.logout}
     </button>
   );

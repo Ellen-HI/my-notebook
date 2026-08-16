@@ -7,6 +7,8 @@ import { translations } from "@/lib/i18n";
 import { useSettingsStore } from "@/lib/store/settingsStore";
 import Link from "next/link";
 
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+
 export default function SignInPage() {
   const language = useSettingsStore((state) => state.language);
   const t = translations[language].auth;
@@ -49,6 +51,7 @@ export default function SignInPage() {
   };
   return (
     <main className="auth-page">
+      <LanguageSwitcher />
       <h1>{t.signIn}</h1>
 
       <form onSubmit={handleSignIn} className="auth-form">

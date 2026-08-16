@@ -2,6 +2,7 @@
 
 import { useSettingsStore } from "@/lib/store/settingsStore";
 import Image from "next/image";
+
 export default function ThemeSwitcher() {
   const theme = useSettingsStore((state) => state.theme);
   const setTheme = useSettingsStore((state) => state.setTheme);

@@ -7,8 +7,9 @@ export default function LanguageSwitcher() {
   const setLanguage = useSettingsStore((state) => state.setLanguage);
 
   return (
-    <div>
+    <div className="wrapp-btn-lang-switch">
       <button
+        className="btn-lang-switch"
         type="button"
         onClick={() => setLanguage("uk")}
         disabled={language === "uk"}
@@ -17,6 +18,7 @@ export default function LanguageSwitcher() {
       </button>
 
       <button
+        className="btn-lang-switch"
         type="button"
         onClick={() => setLanguage("en")}
         disabled={language === "en"}

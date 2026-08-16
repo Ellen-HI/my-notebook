@@ -1,7 +1,7 @@
 :root {
   --paper: #f7f1e3;
   --paper-line: #c8c2b5;
-  --text: #3f3a32;
+  --text: #2c2316;
   scroll-behavior: smooth;
 }
 
@@ -130,20 +130,20 @@ a {
 .writing-line:focus {
   border-bottom-color: #9f998d;
 }
-
+/* --------------------header----------------- */
 /* ------------------theme---------------- */
 html.dark body {
-  background: #3f3a32;
+  background: #483d2ffd;
   color: #f7f1e3;
 }
 html.dark {
-  --paper: #3f3a32;
+  --paper: #483d2ffd;
   --text: #f7f1e3;
 }
 
 html.light body {
   background: #f7f1e3;
-  color: #3f3a32;
+  color: #2c2316;
 }
 html.dark .writing-line {
   color: #f7f1e3;
@@ -152,15 +152,14 @@ html.dark .writing-line {
 }
 
 html.dark .notebook {
-  background-color: #3f3a32;
+  background-color: #483d2ffd;
 }
 
 /* ----------------switcher------------------- */
 .theme-switcher {
   display: flex;
   justify-content: center;
-  gap: 6px;
-  padding: 12px;
+  gap: 15px;
 }
 
 .theme-switcher button {
@@ -169,12 +168,14 @@ html.dark .notebook {
   border: 1px solid transparent;
   border-radius: 8px;
   background: #f7f1e3;
-  color: #3f3a32;
+  color: #2c2316;
   font-size: 17px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  /* border: 1.5px solid var(--text); */
+  /* border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; */
 }
 
 .theme-switcher button:hover {
@@ -187,29 +188,69 @@ html.dark .notebook {
   display: block;
 }
 html.dark .theme-switcher button {
-  background: #3f3a32;
+  background: #483d2ffd;
   color: #f7f1e3;
   border-color: transparent;
 }
 
 html.dark .theme-switcher button:hover {
   background: #c8c2b5;
-  color: #3f3a32;
+  color: #2c2316;
 }
 
-/* --------------------header----------------- */
 .top-controls {
   display: flex;
   width: 100%;
   min-width: 0;
-  flex-wrap: wrap;
+  align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 8px;
-  /* align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px; */
+  padding: 8px 8px 16px;
+}
+
+.flip-controls {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.flip-controls button {
+  width: 40px;
+  height: 40px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--text);
+  font-size: 20px;
+  cursor: pointer;
+  /* border: 1.5px solid var(--text); */
+  /* border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; */
+}
+
+button.logout-button {
+  width: auto;
+  height: 40px;
+  padding: 0 5px;
+  font-size: 16px;
+  background: transparent;
+  color: var(--text);
+  border-color: var(--text);
+  border: 1.5px solid var(--text);
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+}
+button.logout-button:hover {
+  background: var(--paper-line);
+}
+
+html.dark button.logout-button {
+  background: #483d2ffd;
+  color: #f7f1e3;
+  border-color: #f7f1e3;
+}
+
+html.dark button.logout-button:hover {
+  background: #c8c2b5;
+  color: #2c2316;
 }
 
 /* -----------------sign-in-up--------------- */
@@ -288,7 +329,7 @@ html.dark .theme-switcher button:hover {
 }
 
 html.dark .auth-page {
-  background: #3f3a32;
+  background: #483d2ffd;
   color: #f7f1e3;
 }
 
@@ -303,7 +344,7 @@ html.dark .auth-form input::placeholder {
 
 html.dark .auth-button {
   background: #f7f1e3;
-  color: #3f3a32;
+  color: #2c2316;
   border-color: #f7f1e3;
 }
 
@@ -313,6 +354,27 @@ html.dark .google-button {
   border-color: #c8c2b5;
 }
 
+/* ----------------------langSwitch------------------------ */
+
+.wrapp-btn-lang-switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.btn-lang-switch {
+  width: auto;
+  height: 40px;
+  padding: 0 20px;
+  font-size: 16px;
+  background: transparent;
+  color: var(--text);
+  border-color: var(--text);
+  border: 1.5px solid var(--text);
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+}
+.btn-lang-switch:hover {
+  background: var(--paper-line);
+}
 /* -----------------------flipBook-------------- */
 .notebook-page {
   width: 100%;
@@ -371,7 +433,6 @@ html.dark .google-button {
   }
 
   .top-controls {
-    /* justify-content: space-between; */
     gap: 12px;
     padding: 12px;
   }
@@ -379,9 +440,19 @@ html.dark .google-button {
   .theme-switcher button {
     width: 70px;
     height: 70px;
-    font-size: 30px;
   }
   .theme-switcher button img {
+    width: 70px;
+    height: 70px;
+  }
+  button.logout-button {
+    width: auto;
+    height: 70px;
+    font-size: 25px;
+    padding: 10px 10px;
+  }
+
+  .flip-controls button {
     width: 70px;
     height: 70px;
   }

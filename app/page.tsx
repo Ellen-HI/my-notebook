@@ -4,7 +4,6 @@ import { selectNote, useNoteStore } from "@/lib/store/noteStore";
 import { useDebouncedCallback } from "use-debounce";
 import { forwardRef, useEffect, useRef } from "react";
 import LogoutButton from "@/components/LogoutButton";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { translations } from "@/lib/i18n";
 import { useSettingsStore } from "@/lib/store/settingsStore";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
@@ -51,6 +50,8 @@ Page.displayName = "Page";
 type FlipBookApi = {
   pageFlip: () => {
     update: () => void;
+    flipNext: () => void;
+    flipPrev: () => void;
   };
 };
 
@@ -147,8 +148,24 @@ export default function Home() {
   return (
     <main className="notebook">
       <div className="top-controls">
-        <LanguageSwitcher />
         <ThemeSwitcher />
+        <div className="flip-controls">
+          <button
+            type="button"
+            onClick={() => flipBookRef.current?.pageFlip()?.flipPrev()}
+            aria-label="previous page"
+          >
+            лево
+          </button>
+          <button
+            type="button"
+            onClick={() => flipBookRef.current?.pageFlip()?.flipNext()}
+            aria-label="next page"
+          >
+            право
+          </button>
+        </div>
+
         <LogoutButton />
       </div>
 
