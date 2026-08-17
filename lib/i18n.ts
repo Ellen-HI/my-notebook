@@ -20,6 +20,7 @@ export const translations = {
       password: "Пароль",
       signInWithGoogle: "Вхід через Google",
       registrationSuccess: "Реєстрація успішна! Перевір свою електронну пошту.",
+      oauthFailed: "Не вдалося увійти через Google. Спробуйте ще раз.",
     },
   },
 
@@ -44,6 +45,7 @@ export const translations = {
       password: "Password",
       signInWithGoogle: "Continue with Google",
       registrationSuccess: "Registration successful! Check your email.",
+      oauthFailed: "Google sign-in failed. Please try again.",
     },
   },
 } as const;

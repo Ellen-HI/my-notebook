@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { translations } from "@/lib/i18n";
 import { useSettingsStore } from "@/lib/store/settingsStore";
 import Link from "next/link";
@@ -13,10 +13,13 @@ export default function SignInPage() {
   const language = useSettingsStore((state) => state.language);
   const t = translations[language].auth;
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(() =>
+    searchParams.get("error") === "oauth_failed" ? t.oauthFailed : "",
+  );
 
   const handleSignIn = async (event: React.FormEvent) => {
     event.preventDefault();

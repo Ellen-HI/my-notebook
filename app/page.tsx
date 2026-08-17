@@ -8,6 +8,7 @@ import { translations } from "@/lib/i18n";
 import { useSettingsStore } from "@/lib/store/settingsStore";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import HTMLFlipBook from "react-pageflip-enhanced";
+import Image from "next/image";
 
 const getWeek = (weekOffset: number) => {
   const today = new Date();
@@ -101,6 +102,7 @@ function NoteInput({
 export default function Home() {
   const flipBookRef = useRef<FlipBookApi | null>(null);
   const language = useSettingsStore((state) => state.language);
+  const theme = useSettingsStore((state) => state.theme);
   const setNote = useNoteStore((state) => state.setNote);
   const setNotes = useNoteStore((state) => state.setNotes);
 
@@ -155,14 +157,26 @@ export default function Home() {
             onClick={() => flipBookRef.current?.pageFlip()?.flipPrev()}
             aria-label="previous page"
           >
-            лево
+            <Image
+              src={theme === "dark" ? "/leftLight.svg" : "/left.svg"}
+              alt="Previous page"
+              width={40}
+              height={40}
+              loading="eager"
+            />
           </button>
           <button
             type="button"
             onClick={() => flipBookRef.current?.pageFlip()?.flipNext()}
             aria-label="next page"
           >
-            право
+            <Image
+              src={theme === "dark" ? "/rightLight.svg" : "/right.svg"}
+              alt="Next page"
+              width={40}
+              height={40}
+              loading="eager"
+            />
           </button>
         </div>
 
