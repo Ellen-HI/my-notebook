@@ -206,12 +206,12 @@ export default function Home() {
         showCover={false}
         usePortrait={true}
         autoSize={true}
-        mobileScrollSupport={true}
+        mobileScrollSupport={false}
         clickEventForward={false}
-        useMouseEvents={true}
+        useMouseEvents={false}
         swipeDistance={18}
-        showPageCorners={true}
-        disableFlipByClick={false}
+        showPageCorners={false}
+        disableFlipByClick={true}
         drawShadow={true}
         maxShadowOpacity={0.35}
         flippingTime={450}

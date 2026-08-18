@@ -190,7 +190,8 @@ html.dark .notebook {
 }
 
 .theme-switcher button:hover {
-  background: #c8c2b5;
+  /* background: #c8c2b5; */
+  border-color: var(--paper-line);
 }
 
 .theme-switcher button img {
@@ -205,8 +206,9 @@ html.dark .theme-switcher button {
 }
 
 html.dark .theme-switcher button:hover {
-  background: #c8c2b5;
-  color: #2c2316;
+  /* background: #c8c2b5; */
+  border-color: var(--paper-line);
+  /* color: #2c2316; */
 }
 
 .top-controls {
@@ -376,7 +378,8 @@ html.dark .google-button {
 .wrapp-btn-lang-switch {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 10px;
 }
 .btn-lang-switch {
   width: auto;
@@ -409,7 +412,6 @@ html.dark .google-button {
   margin: 0 auto;
   width: 100% !important;
 }
-
 .flip-book.stf__parent {
   min-width: 0 !important;
   width: 100% !important;

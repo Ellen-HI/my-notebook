@@ -23,6 +23,7 @@ export const useSettingsStore = create<SettingsState>()(
     }),
     {
       name: "notebook-settings",
+      // skipHydration: true,
     },
   ),
 );
