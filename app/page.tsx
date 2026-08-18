@@ -9,6 +9,7 @@ import { useSettingsStore } from "@/lib/store/settingsStore";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import HTMLFlipBook from "react-pageflip-enhanced";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 const getWeek = (weekOffset: number) => {
   const today = new Date();
@@ -64,11 +65,13 @@ function NoteInput({
   line,
   setNote,
   saveNoteToDatabase,
+  notesT,
 }: {
   dateKey: string;
   line: number;
   setNote: (day: string, line: number, text: string) => void;
   saveNoteToDatabase: SaveNoteFn;
+  notesT: (typeof translations)[keyof typeof translations]["notes"];
 }) {
   const note = useNoteStore(selectNote(dateKey, line));
 
@@ -92,6 +95,7 @@ function NoteInput({
 
           deleteNote(dateKey, line).catch((error) => {
             console.error("Не вдалося видалити запис:", error);
+            toast.error(notesT.deleteFailed);
           });
         }
       }}
@@ -102,6 +106,7 @@ function NoteInput({
 export default function Home() {
   const flipBookRef = useRef<FlipBookApi | null>(null);
   const language = useSettingsStore((state) => state.language);
+  const notesT = translations[language].notes;
   const theme = useSettingsStore((state) => state.theme);
   const setNote = useNoteStore((state) => state.setNote);
   const setNotes = useNoteStore((state) => state.setNotes);
@@ -113,10 +118,12 @@ export default function Home() {
         setNotes(data);
       } catch (error) {
         console.error("Не вдалося завантажити записи:", error);
+        toast.error(notesT.loadFailed);
       }
     };
 
     loadNotes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setNotes]);
 
   useEffect(() => {
@@ -142,6 +149,7 @@ export default function Home() {
         await saveNote(day, line, text);
       } catch (error) {
         console.error("Не вдалося зберегти запис:", error);
+        toast.error(notesT.saveFailed);
       }
     },
     500,
@@ -245,6 +253,7 @@ export default function Home() {
                             line={lineIndex + 1}
                             setNote={setNote}
                             saveNoteToDatabase={saveNoteToDatabase}
+                            notesT={notesT}
                           />
                         ))}
                       </div>

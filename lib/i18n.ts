@@ -22,6 +22,19 @@ export const translations = {
       registrationSuccess: "Реєстрація успішна! Перевір свою електронну пошту.",
       oauthFailed: "Не вдалося увійти через Google. Спробуйте ще раз.",
     },
+    errors: {
+      invalidCredentials: "Невірний email або пароль",
+      userAlreadyRegistered: "Користувач із такою поштою вже існує",
+      emailNotConfirmed: "Підтвердіть email перед входом",
+      weakPassword: "Пароль занадто простий",
+      tooManyRequests: "Забагато спроб. Спробуйте пізніше",
+      generic: "Щось пішло не так. Спробуйте ще раз",
+    },
+    notes: {
+      loadFailed: "Не вдалося завантажити записи",
+      saveFailed: "Не вдалося зберегти запис",
+      deleteFailed: "Не вдалося видалити запис",
+    },
   },
 
   en: {
@@ -46,6 +59,19 @@ export const translations = {
       signInWithGoogle: "Continue with Google",
       registrationSuccess: "Registration successful! Check your email.",
       oauthFailed: "Google sign-in failed. Please try again.",
+    },
+    errors: {
+      invalidCredentials: "Invalid email or password",
+      userAlreadyRegistered: "A user with this email already exists",
+      emailNotConfirmed: "Please confirm your email before signing in",
+      weakPassword: "Password is too weak",
+      tooManyRequests: "Too many attempts. Please try again later",
+      generic: "Something went wrong. Please try again",
+    },
+    notes: {
+      loadFailed: "Failed to load notes",
+      saveFailed: "Failed to save note",
+      deleteFailed: "Failed to delete note",
     },
   },
 } as const;

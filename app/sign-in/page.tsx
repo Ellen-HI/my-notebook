@@ -8,6 +8,7 @@ import { useSettingsStore } from "@/lib/store/settingsStore";
 import Link from "next/link";
 
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { getAuthErrorMessage } from "@/lib/authErrors";
 
 export default function SignInPage() {
   const language = useSettingsStore((state) => state.language);
@@ -32,7 +33,7 @@ export default function SignInPage() {
     });
 
     if (error) {
-      setMessage(error.message);
+      setMessage(getAuthErrorMessage(error, language));
       return;
     }
 
@@ -49,7 +50,7 @@ export default function SignInPage() {
     });
 
     if (error) {
-      setMessage(error.message);
+      setMessage(getAuthErrorMessage(error, language));
     }
   };
   return (

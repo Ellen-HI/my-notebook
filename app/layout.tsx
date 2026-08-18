@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Caveat } from "next/font/google";
 import "./globals.css";
 import ThemeProvider from "@/components/ThemeProvider";
+import { Toaster } from "react-hot-toast";
 
 const caveat = Caveat({
   weight: "400",
@@ -17,7 +18,36 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en">
       <body className={caveat.className}>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          {children}
+          <Toaster
+            position="top-center"
+            toastOptions={{
+              duration: 3000,
+              style: {
+                border: "1px solid #c8c2b5",
+                borderRadius: "255px 15px 225px 15px / 15px 225px 15px 255px",
+                padding: "16px",
+                background: "#c8c2b5",
+                color: "#2c2316",
+              },
+              success: {
+                icon: "🥰",
+                // iconTheme: {
+                //   primary: "#2c2316",
+                //   secondary: "#f7f1e3",
+                // },
+              },
+              error: {
+                icon: "🫩",
+                // iconTheme: {
+                //   primary: "#2c2316",
+                //   secondary: "#f7f1e3",
+                // },
+              },
+            }}
+          />
+        </ThemeProvider>
       </body>
     </html>
   );
