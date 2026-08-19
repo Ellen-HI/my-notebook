@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { translations } from "@/lib/i18n";
 import { useSettingsStore } from "@/lib/store/settingsStore";
 import Link from "next/link";
-
+import toast from "react-hot-toast";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { getAuthErrorMessage } from "@/lib/authErrors";
 
@@ -18,14 +18,20 @@ export default function SignInForm() {
   const supabase = createClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState(() =>
-    searchParams.get("error") === "oauth_failed" ? t.oauthFailed : "",
-  );
+  // const [message, setMessage] = useState(() =>
+  //   searchParams.get("error") === "oauth_failed" ? t.oauthFailed : "",
+  // );
+
+  useState(() => {
+    if (searchParams.get("error") === "oauth_failed") {
+      toast.error(t.oauthFailed);
+    }
+  });
 
   const handleSignIn = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    setMessage("");
+    // setMessage("");
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -33,7 +39,7 @@ export default function SignInForm() {
     });
 
     if (error) {
-      setMessage(getAuthErrorMessage(error, language));
+      toast.error(getAuthErrorMessage(error, language));
       return;
     }
 
@@ -50,7 +56,7 @@ export default function SignInForm() {
     });
 
     if (error) {
-      setMessage(getAuthErrorMessage(error, language));
+      toast.error(getAuthErrorMessage(error, language));
     }
   };
   return (
@@ -89,7 +95,6 @@ export default function SignInForm() {
         {language === "uk" ? "Немає акаунта?" : "Don't have an account?"}{" "}
         <Link href="/sign-up">{t.toSignUp}</Link>
       </p>
-      {message && <p>{message}</p>}
     </main>
   );
 }

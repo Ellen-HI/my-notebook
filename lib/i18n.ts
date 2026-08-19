@@ -19,8 +19,8 @@ export const translations = {
       email: "Email",
       password: "Пароль",
       signInWithGoogle: "Вхід через Google",
-      registrationSuccess: "Реєстрація успішна! Перевір свою електронну пошту.",
-      oauthFailed: "Не вдалося увійти через Google. Спробуйте ще раз.",
+      registrationSuccess: "В тебе вийшло! Перевір свою пошту.",
+      oauthFailed: "Не вдалося увійти через Google. Давай ще раз.",
     },
     errors: {
       invalidCredentials: "Невірний email або пароль",
@@ -28,7 +28,7 @@ export const translations = {
       emailNotConfirmed: "Підтвердіть email перед входом",
       weakPassword: "Пароль занадто простий",
       tooManyRequests: "Забагато спроб. Спробуйте пізніше",
-      generic: "Щось пішло не так. Спробуйте ще раз",
+      generic: "Йоой... Спробуйте ще раз",
     },
     notes: {
       loadFailed: "Не вдалося завантажити записи",
@@ -57,7 +57,7 @@ export const translations = {
       email: "Email",
       password: "Password",
       signInWithGoogle: "Continue with Google",
-      registrationSuccess: "Registration successful! Check your email.",
+      registrationSuccess: "You did it! Check your email.",
       oauthFailed: "Google sign-in failed. Please try again.",
     },
     errors: {
@@ -66,7 +66,7 @@ export const translations = {
       emailNotConfirmed: "Please confirm your email before signing in",
       weakPassword: "Password is too weak",
       tooManyRequests: "Too many attempts. Please try again later",
-      generic: "Something went wrong. Please try again",
+      generic: "Oops... Please try again",
     },
     notes: {
       loadFailed: "Failed to load notes",

@@ -83,16 +83,22 @@ function NoteInput({
       onChange={(event) => {
         const text = event.target.value;
         setNote(dateKey, line, text);
-        if (text.trim()) {
-          saveNoteToDatabase(dateKey, line, text);
-        }
+        // if (text.trim()) {
+        saveNoteToDatabase(dateKey, line, text);
+        // }
       }}
       onBlur={(event) => {
         const text = event.target.value;
 
-        if (!text.trim()) {
-          saveNoteToDatabase.cancel();
+        // if (!text.trim()) {
+        saveNoteToDatabase.cancel();
 
+        if (text.trim()) {
+          saveNote(dateKey, line, text).catch((error) => {
+            console.error("Не вдалося зберегти запис:", error);
+            toast.error(notesT.saveFailed);
+          });
+        } else {
           deleteNote(dateKey, line).catch((error) => {
             console.error("Не вдалося видалити запис:", error);
             toast.error(notesT.deleteFailed);
@@ -126,12 +132,21 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setNotes]);
 
+  const notebookRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     const updateBook = () => {
       flipBookRef.current?.pageFlip()?.update();
     };
 
     const timer = window.setTimeout(updateBook, 100);
+    document.fonts?.ready?.then(updateBook);
+    let resizeObserver: ResizeObserver | undefined;
+
+    if (notebookRef.current && "ResizeObserver" in window) {
+      resizeObserver = new ResizeObserver(() => updateBook());
+      resizeObserver.observe(notebookRef.current);
+    }
 
     window.addEventListener("orientationchange", updateBook);
     window.addEventListener("resize", updateBook);
@@ -140,23 +155,28 @@ export default function Home() {
       window.clearTimeout(timer);
       window.removeEventListener("orientationchange", updateBook);
       window.removeEventListener("resize", updateBook);
+      resizeObserver?.disconnect();
     };
   }, []);
 
   const saveNoteToDatabase = useDebouncedCallback(
     async (day: string, line: number, text: string) => {
       try {
-        await saveNote(day, line, text);
+        if (text.trim()) {
+          await saveNote(day, line, text);
+        } else {
+          await deleteNote(day, line);
+        }
       } catch (error) {
-        console.error("Не вдалося зберегти запис:", error);
-        toast.error(notesT.saveFailed);
+        console.error("Не вдалося синхронізувати запис:", error);
+        toast.error(text.trim() ? notesT.saveFailed : notesT.deleteFailed);
       }
     },
     500,
   );
 
   return (
-    <main className="notebook">
+    <main className="notebook" ref={notebookRef}>
       <div className="top-controls">
         <ThemeSwitcher />
         <div className="flip-controls">

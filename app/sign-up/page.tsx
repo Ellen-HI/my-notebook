@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { translations } from "@/lib/i18n";
 import { useSettingsStore } from "@/lib/store/settingsStore";
 import Link from "next/link";
+import toast from "react-hot-toast";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { getAuthErrorMessage } from "@/lib/authErrors";
 
@@ -13,12 +14,10 @@ export default function SignUpPage() {
   const t = translations[language].auth;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
 
   const handleSignUp = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    setMessage("");
     const supabase = createClient();
     const { error } = await supabase.auth.signUp({
       email,
@@ -26,11 +25,11 @@ export default function SignUpPage() {
     });
 
     if (error) {
-      setMessage(getAuthErrorMessage(error, language));
+      toast.error(getAuthErrorMessage(error, language));
       return;
     }
 
-    setMessage(t.registrationSuccess);
+    toast.success(t.registrationSuccess);
   };
 
   return (
@@ -64,7 +63,6 @@ export default function SignUpPage() {
         {language === "uk" ? "Вже маєте акаунт?" : "Already have an account?"}{" "}
         <Link href="/sign-in">{t.toSignIn}</Link>
       </p>
-      {message && <p>{message}</p>}
     </main>
   );
 }
