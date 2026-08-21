@@ -425,6 +425,12 @@ html.dark .google-button {
   background: var(--paper);
 }
 
+.notebook-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* --------------------tablet---------------- */
 
 @media (min-width: 768px) {

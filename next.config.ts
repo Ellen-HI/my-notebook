@@ -13,6 +13,8 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   allowedDevOrigins: ["192.168.0.2"],
   devIndicators: false,
+
+  turbopack: {},
 };
 
 export default withSerwist(nextConfig);

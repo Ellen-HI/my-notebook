@@ -2,7 +2,7 @@
 import { saveNote, fetchNotes, deleteNote } from "@/lib/api/notesApi";
 import { selectNote, useNoteStore } from "@/lib/store/noteStore";
 import { useDebouncedCallback } from "use-debounce";
-import { forwardRef, useEffect, useRef } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import LogoutButton from "@/components/LogoutButton";
 import { translations } from "@/lib/i18n";
 import { useSettingsStore } from "@/lib/store/settingsStore";
@@ -10,6 +10,7 @@ import ThemeSwitcher from "@/components/ThemeSwitcher";
 import HTMLFlipBook from "react-pageflip-enhanced";
 import Image from "next/image";
 import toast from "react-hot-toast";
+import Loader from "@/components/Loader/Loader";
 
 const getWeek = (weekOffset: number) => {
   const today = new Date();
@@ -116,6 +117,7 @@ export default function Home() {
   const theme = useSettingsStore((state) => state.theme);
   const setNote = useNoteStore((state) => state.setNote);
   const setNotes = useNoteStore((state) => state.setNotes);
+  const [isLoadingNotes, setIsLoadingNotes] = useState(true);
 
   useEffect(() => {
     const loadNotes = async () => {
@@ -125,6 +127,8 @@ export default function Home() {
       } catch (error) {
         console.error("Не вдалося завантажити записи:", error);
         toast.error(notesT.loadFailed);
+      } finally {
+        setIsLoadingNotes(false);
       }
     };
 
@@ -175,6 +179,13 @@ export default function Home() {
     500,
   );
 
+  if (isLoadingNotes) {
+    return (
+      <main className="notebook notebook-loading">
+        <Loader size="large" />
+      </main>
+    );
+  }
   return (
     <main className="notebook" ref={notebookRef}>
       <div className="top-controls">

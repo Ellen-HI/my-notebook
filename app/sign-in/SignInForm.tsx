@@ -9,6 +9,7 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { getAuthErrorMessage } from "@/lib/authErrors";
+import Loader from "@/components/Loader/Loader";
 
 export default function SignInForm() {
   const language = useSettingsStore((state) => state.language);
@@ -18,10 +19,8 @@ export default function SignInForm() {
   const supabase = createClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [message, setMessage] = useState(() =>
-  //   searchParams.get("error") === "oauth_failed" ? t.oauthFailed : "",
-  // );
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   useState(() => {
     if (searchParams.get("error") === "oauth_failed") {
       toast.error(t.oauthFailed);
@@ -30,6 +29,7 @@ export default function SignInForm() {
 
   const handleSignIn = async (event: React.FormEvent) => {
     event.preventDefault();
+    setIsLoading(true);
 
     // setMessage("");
 
@@ -38,6 +38,7 @@ export default function SignInForm() {
       password,
     });
 
+    setIsLoading(false);
     if (error) {
       toast.error(getAuthErrorMessage(error, language));
       return;
@@ -48,6 +49,7 @@ export default function SignInForm() {
   };
 
   const handleGoogleSignIn = async () => {
+    setIsGoogleLoading(true);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
@@ -56,6 +58,7 @@ export default function SignInForm() {
     });
 
     if (error) {
+      setIsGoogleLoading(false);
       toast.error(getAuthErrorMessage(error, language));
     }
   };
@@ -71,6 +74,7 @@ export default function SignInForm() {
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           required
+          disabled={isLoading || isGoogleLoading}
         />
 
         <input
@@ -79,16 +83,22 @@ export default function SignInForm() {
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           required
+          disabled={isLoading || isGoogleLoading}
         />
-        <button className="auth-button" type="submit">
-          {t.signIn}
+        <button
+          className="auth-button"
+          type="submit"
+          disabled={isLoading || isGoogleLoading}
+        >
+          {isLoading ? <Loader /> : t.signIn}
         </button>
         <button
           className="auth-button google-button"
           type="button"
           onClick={handleGoogleSignIn}
+          disabled={isLoading || isGoogleLoading}
         >
-          {t.signInWithGoogle}
+          {isGoogleLoading ? <Loader /> : t.signInWithGoogle}
         </button>
       </form>
       <p className="auth-switch">

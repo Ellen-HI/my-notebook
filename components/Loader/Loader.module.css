@@ -1,0 +1,148 @@
+.loader {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  height: 40px;
+  width: 90px;
+}
+
+.loaderLarge {
+  height: 70px;
+  width: 150px;
+}
+
+.pen {
+  position: absolute;
+  bottom: 6px;
+  left: 0;
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  animation: penWrite 2s ease-in-out infinite;
+  transform-origin: 70% 70%;
+}
+
+.loaderLarge .pen {
+  width: 42px;
+  height: 42px;
+  bottom: 10px;
+}
+
+.stroke {
+  position: absolute;
+  bottom: 4px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--text);
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.loaderLarge .stroke {
+  height: 3px;
+  bottom: 6px;
+}
+
+.stroke1 {
+  left: 8px;
+  width: 16px;
+  animation: strokeAppear1 2s ease-in-out infinite;
+}
+
+.stroke2 {
+  left: 34px;
+  width: 14px;
+  animation: strokeAppear2 2s ease-in-out infinite;
+}
+
+.stroke3 {
+  left: 58px;
+  width: 18px;
+  animation: strokeAppear3 2s ease-in-out infinite;
+}
+
+/* Ручка їде зліва направо з невеликим "хитанням", ніби пише */
+@keyframes penWrite {
+  0% {
+    transform: translateX(0) rotate(0deg);
+  }
+  8% {
+    transform: translateX(4px) rotate(-6deg);
+  }
+  16% {
+    transform: translateX(8px) rotate(4deg);
+  }
+  35% {
+    transform: translateX(34px) rotate(-6deg);
+  }
+  43% {
+    transform: translateX(38px) rotate(4deg);
+  }
+  62% {
+    transform: translateX(58px) rotate(-6deg);
+  }
+  70% {
+    transform: translateX(62px) rotate(4deg);
+  }
+  85%,
+  100% {
+    transform: translateX(62px) rotate(0deg);
+  }
+}
+
+/* Кожен штрих зявляється саме тоді, коли ручка "проходить" повз нього,
+   тримається видимим, а потім все разом стирається наприкінці циклу */
+@keyframes strokeAppear1 {
+  0%,
+  10% {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  18%,
+  82% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  92%,
+  100% {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+}
+
+@keyframes strokeAppear2 {
+  0%,
+  36% {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  44%,
+  82% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  92%,
+  100% {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+}
+
+@keyframes strokeAppear3 {
+  0%,
+  63% {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  71%,
+  82% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  92%,
+  100% {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+}

@@ -7,6 +7,7 @@ import { useSettingsStore } from "@/lib/store/settingsStore";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import Loader from "@/components/Loader/Loader";
 import { getAuthErrorMessage } from "@/lib/authErrors";
 
 export default function SignUpPage() {
@@ -14,9 +15,11 @@ export default function SignUpPage() {
   const t = translations[language].auth;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSignUp = async (event: React.FormEvent) => {
     event.preventDefault();
+    setIsLoading(true);
 
     const supabase = createClient();
     const { error } = await supabase.auth.signUp({
@@ -24,6 +27,7 @@ export default function SignUpPage() {
       password,
     });
 
+    setIsLoading(false);
     if (error) {
       toast.error(getAuthErrorMessage(error, language));
       return;
@@ -44,6 +48,7 @@ export default function SignUpPage() {
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           required
+          disabled={isLoading}
         />
 
         <input
@@ -53,10 +58,11 @@ export default function SignUpPage() {
           onChange={(event) => setPassword(event.target.value)}
           required
           minLength={6}
+          disabled={isLoading}
         />
 
-        <button className="auth-button" type="submit">
-          {t.signUp}
+        <button className="auth-button" type="submit" disabled={isLoading}>
+          {isLoading ? <Loader /> : t.signUp}
         </button>
       </form>
       <p className="auth-switch">
