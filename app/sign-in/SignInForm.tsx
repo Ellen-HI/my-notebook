@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { getAuthErrorMessage } from "@/lib/authErrors";
 import Loader from "@/components/Loader";
-
+import PasswordInput from "@/components/PasswordInput";
 export default function SignInForm() {
   const language = useSettingsStore((state) => state.language);
   const t = translations[language].auth;
@@ -77,11 +77,10 @@ export default function SignInForm() {
           disabled={isLoading || isGoogleLoading}
         />
 
-        <input
-          type="password"
-          placeholder={t.password}
+        <PasswordInput
           value={password}
           onChange={(event) => setPassword(event.target.value)}
+          placeholder={t.password}
           required
           disabled={isLoading || isGoogleLoading}
         />

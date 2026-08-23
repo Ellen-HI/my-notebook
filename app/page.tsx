@@ -31,10 +31,10 @@ const getWeek = (weekOffset: number) => {
 
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
+    const dayOfMonth = String(date.getDate()).padStart(2, "0");
 
     return {
-      date: `${year}-${month}-${day}`,
+      date: `${year}-${month}-${dayOfMonth}`,
     };
   });
 };
@@ -58,20 +58,21 @@ type FlipBookApi = {
   };
 };
 
-type SaveNoteFn = ((day: string, line: number, text: string) => void) & {
+type SyncNoteFn = ((day: string, line: number, text: string) => void) & {
   cancel: () => void;
 };
+
 function NoteInput({
   dateKey,
   line,
   setNote,
-  saveNoteToDatabase,
+  syncNoteToDatabase,
   notesT,
 }: {
   dateKey: string;
   line: number;
   setNote: (day: string, line: number, text: string) => void;
-  saveNoteToDatabase: SaveNoteFn;
+  syncNoteToDatabase: SyncNoteFn;
   notesT: (typeof translations)[keyof typeof translations]["notes"];
 }) {
   const note = useNoteStore(selectNote(dateKey, line));
@@ -84,15 +85,13 @@ function NoteInput({
       onChange={(event) => {
         const text = event.target.value;
         setNote(dateKey, line, text);
-        // if (text.trim()) {
-        saveNoteToDatabase(dateKey, line, text);
-        // }
+
+        syncNoteToDatabase(dateKey, line, text);
       }}
       onBlur={(event) => {
         const text = event.target.value;
 
-        // if (!text.trim()) {
-        saveNoteToDatabase.cancel();
+        syncNoteToDatabase.cancel();
 
         if (text.trim()) {
           saveNote(dateKey, line, text).catch((error) => {
@@ -139,11 +138,16 @@ export default function Home() {
   const notebookRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    if (isLoadingNotes) {
+      return;
+    }
+
     const updateBook = () => {
       flipBookRef.current?.pageFlip()?.update();
     };
 
-    const timer = window.setTimeout(updateBook, 100);
+    const initialTimer = window.setTimeout(updateBook, 100);
+
     document.fonts?.ready?.then(updateBook);
     let resizeObserver: ResizeObserver | undefined;
 
@@ -156,14 +160,14 @@ export default function Home() {
     window.addEventListener("resize", updateBook);
 
     return () => {
-      window.clearTimeout(timer);
+      window.clearTimeout(initialTimer);
+      resizeObserver?.disconnect();
       window.removeEventListener("orientationchange", updateBook);
       window.removeEventListener("resize", updateBook);
-      resizeObserver?.disconnect();
     };
-  }, []);
+  }, [isLoadingNotes]);
 
-  const saveNoteToDatabase = useDebouncedCallback(
+  const syncNoteToDatabase = useDebouncedCallback(
     async (day: string, line: number, text: string) => {
       try {
         if (text.trim()) {
@@ -186,6 +190,7 @@ export default function Home() {
       </main>
     );
   }
+
   return (
     <main className="notebook" ref={notebookRef}>
       <div className="top-controls">
@@ -283,7 +288,7 @@ export default function Home() {
                             dateKey={dateKey}
                             line={lineIndex + 1}
                             setNote={setNote}
-                            saveNoteToDatabase={saveNoteToDatabase}
+                            syncNoteToDatabase={syncNoteToDatabase}
                             notesT={notesT}
                           />
                         ))}

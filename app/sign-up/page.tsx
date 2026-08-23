@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import Loader from "@/components/Loader";
 import { getAuthErrorMessage } from "@/lib/authErrors";
-
+import PasswordInput from "@/components/PasswordInput";
 export default function SignUpPage() {
   const language = useSettingsStore((state) => state.language);
   const t = translations[language].auth;
@@ -25,6 +25,9 @@ export default function SignUpPage() {
     const { error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
     });
 
     setIsLoading(false);
@@ -51,11 +54,10 @@ export default function SignUpPage() {
           disabled={isLoading}
         />
 
-        <input
-          type="password"
-          placeholder={t.password}
+        <PasswordInput
           value={password}
           onChange={(event) => setPassword(event.target.value)}
+          placeholder={t.password}
           required
           minLength={6}
           disabled={isLoading}

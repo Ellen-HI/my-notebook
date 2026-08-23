@@ -442,6 +442,37 @@ html.dark .google-button {
   justify-content: center;
 }
 
+/* ---------------------eye--------------------- */
+.password-field {
+  position: relative;
+  width: 100%;
+}
+
+.password-field input {
+  width: 100%;
+  padding-right: 44px;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+.password-toggle:hover {
+  opacity: 1;
+}
+
 /* --------------------tablet---------------- */
 
 @media (min-width: 768px) {

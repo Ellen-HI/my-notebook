@@ -11,7 +11,7 @@ const withSerwist = withSerwistInit({
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
-  allowedDevOrigins: ["192.168.0.2"],
+  allowedDevOrigins: ["192.168.0.3"],
   devIndicators: false,
 
   turbopack: {},
