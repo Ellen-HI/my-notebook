@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Caveat } from "next/font/google";
 import "./globals.css";
-// import SettingsHydrator from "@/components/SettingsHydrator";
+
 import ThemeProvider from "@/components/ThemeProvider";
 import { Toaster } from "react-hot-toast";
 
@@ -57,7 +57,6 @@ export default function RootLayout({
         />
       </head>
       <body className={caveat.className}>
-        {/* <SettingsHydrator> */}
         <ThemeProvider>
           {children}
           <Toaster
@@ -73,22 +72,13 @@ export default function RootLayout({
               },
               success: {
                 icon: "🥰",
-                // iconTheme: {
-                //   primary: "#2c2316",
-                //   secondary: "#f7f1e3",
-                // },
               },
               error: {
                 icon: "🫩",
-                // iconTheme: {
-                //   primary: "#2c2316",
-                //   secondary: "#f7f1e3",
-                // },
               },
             }}
           />
         </ThemeProvider>
-        {/* </SettingsHydrator> */}
       </body>
     </html>
   );

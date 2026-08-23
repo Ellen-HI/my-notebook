@@ -30,7 +30,9 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (error) {
       console.error("Не вдалося обміняти код на сесію:", error);
-      return NextResponse.redirect(`${origin}/sign-in?error=oauth_failed`);
+      return NextResponse.redirect(
+        `${origin}/sign-in?error=confirmation_failed`,
+      );
     }
   }
 

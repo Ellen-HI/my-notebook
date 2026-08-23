@@ -21,6 +21,8 @@ export const translations = {
       signInWithGoogle: "Вхід через Google",
       registrationSuccess: "В тебе вийшло! Перевір свою пошту.",
       oauthFailed: "Не вдалося увійти через Google. Давай ще раз.",
+      confirmationFailed:
+        "Посилання вже використане або застаріле. Спробуйте увійти.",
     },
     errors: {
       invalidCredentials: "Невірний email або пароль",
@@ -59,6 +61,8 @@ export const translations = {
       signInWithGoogle: "Continue with Google",
       registrationSuccess: "You did it! Check your email.",
       oauthFailed: "Google sign-in failed. Please try again.",
+      confirmationFailed:
+        "This link was already used or has expired. Try signing in.",
     },
     errors: {
       invalidCredentials: "Invalid email or password",

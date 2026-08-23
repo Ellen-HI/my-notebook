@@ -22,16 +22,18 @@ export default function SignInForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   useState(() => {
-    if (searchParams.get("error") === "oauth_failed") {
+    const errorType = searchParams.get("error");
+
+    if (errorType === "oauth_failed") {
       toast.error(t.oauthFailed);
+    } else if (errorType === "confirmation_failed") {
+      toast.error(t.confirmationFailed);
     }
   });
 
   const handleSignIn = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
-
-    // setMessage("");
 
     const { error } = await supabase.auth.signInWithPassword({
       email,

@@ -10,8 +10,6 @@ export default function ThemeProvider({
 }) {
   const theme = useSettingsStore((state) => state.theme);
 
-  // NOTE: Theme is now applied via inline script in layout.tsx before hydration.
-  // This effect handles theme changes after the initial page load (when user switches themes).
   useEffect(() => {
     document.documentElement.classList.remove("light", "dark");
     document.documentElement.classList.add(theme);
