@@ -9,7 +9,7 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { getAuthErrorMessage } from "@/lib/authErrors";
-import Loader from "@/components/Loader/Loader";
+import Loader from "@/components/Loader";
 
 export default function SignInForm() {
   const language = useSettingsStore((state) => state.language);

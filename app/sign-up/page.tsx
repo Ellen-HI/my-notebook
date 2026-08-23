@@ -7,7 +7,7 @@ import { useSettingsStore } from "@/lib/store/settingsStore";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
-import Loader from "@/components/Loader/Loader";
+import Loader from "@/components/Loader";
 import { getAuthErrorMessage } from "@/lib/authErrors";
 
 export default function SignUpPage() {

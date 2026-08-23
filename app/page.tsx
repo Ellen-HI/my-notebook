@@ -10,7 +10,7 @@ import ThemeSwitcher from "@/components/ThemeSwitcher";
 import HTMLFlipBook from "react-pageflip-enhanced";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import Loader from "@/components/Loader/Loader";
+import Loader from "@/components/Loader";
 
 const getWeek = (weekOffset: number) => {
   const today = new Date();
