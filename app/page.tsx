@@ -1,5 +1,10 @@
 "use client";
-import { saveNote, fetchNotes, deleteNote } from "@/lib/api/notesApi";
+import {
+  saveNote,
+  fetchNotes,
+  deleteNote,
+  syncPendingSaves,
+} from "@/lib/api/notesApi";
 import { selectNote, useNoteStore } from "@/lib/store/noteStore";
 import { useDebouncedCallback } from "use-debounce";
 import { forwardRef, useEffect, useRef, useState } from "react";
@@ -121,6 +126,7 @@ export default function Home() {
   useEffect(() => {
     const loadNotes = async () => {
       try {
+        await syncPendingSaves();
         const data = await fetchNotes();
         setNotes(data);
       } catch (error) {
@@ -133,6 +139,22 @@ export default function Home() {
 
     loadNotes();
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setNotes]);
+
+  useEffect(() => {
+    const handleOnline = () => {
+      syncPendingSaves().then(() => {
+        fetchNotes()
+          .then(setNotes)
+          .catch(() => {});
+      });
+    };
+
+    window.addEventListener("online", handleOnline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+    };
   }, [setNotes]);
 
   const notebookRef = useRef<HTMLDivElement | null>(null);
