@@ -158,7 +158,9 @@ export default function Home() {
         setNotes(data);
       } catch (error) {
         console.error("Не вдалося завантажити записи:", error);
-        toast.error(notesT.loadFailed);
+        if (navigator.onLine) {
+          toast.error(notesT.loadFailed);
+        }
       } finally {
         setIsLoadingNotes(false);
       }
