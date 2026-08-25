@@ -97,7 +97,7 @@ export async function saveNote(day: string, line: number, text: string) {
 
     return data as Note;
   } catch (err) {
-    if (!navigator.onLine) {
+    if (!navigator.onLine || isNetworkError(err)) {
       queueSave(day, line, text);
       return null;
     }
@@ -157,10 +157,14 @@ export async function deleteNote(day: string, line: number) {
       throw new Error(error.message);
     }
   } catch (err) {
-    if (!navigator.onLine) {
+    if (!navigator.onLine || isNetworkError(err)) {
       queueSave(day, line, "");
       return;
     }
     throw err;
   }
+}
+
+function isNetworkError(err: unknown): boolean {
+  return err instanceof TypeError && /fetch/i.test(err.message);
 }
