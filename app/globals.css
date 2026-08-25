@@ -123,7 +123,7 @@ html.dark .day:nth-child(4) {
   margin-top: 3px;
   text-align: center;
 
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .writing-lines {
@@ -139,7 +139,7 @@ html.dark .day:nth-child(4) {
   background: transparent;
   color: var(--text);
   font-family: inherit;
-  font-size: 16px;
+  font-size: 18px;
   height: 22px;
   padding: 2px 4px;
 }
@@ -261,7 +261,7 @@ button.logout-button {
   width: auto;
   height: 40px;
   padding: 0 5px;
-  font-size: 16px;
+  font-size: 18px;
   background: transparent;
   color: var(--text);
   border-color: var(--paper-line);
