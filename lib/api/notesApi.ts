@@ -32,9 +32,12 @@ export function clearUserIdCache() {
 
 export async function fetchNotes() {
   const supabase = createClient();
+  const user_id = await getUserId(supabase);
+
   const { data, error } = await supabase
     .from("notes")
     .select("*")
+    .eq("user_id", user_id)
     .order("day")
     .order("line");
 

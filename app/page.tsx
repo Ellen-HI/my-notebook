@@ -16,6 +16,10 @@ import HTMLFlipBook from "react-pageflip-enhanced";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import Loader from "@/components/Loader";
+import {
+  selectNoteStatus,
+  useNoteStatusStore,
+} from "@/lib/store/noteStatusStore";
 
 const getWeek = (weekOffset: number) => {
   const today = new Date();
@@ -81,36 +85,59 @@ function NoteInput({
   notesT: (typeof translations)[keyof typeof translations]["notes"];
 }) {
   const note = useNoteStore(selectNote(dateKey, line));
+  const status = useNoteStatusStore(selectNoteStatus(dateKey, line));
+  const setStatus = useNoteStatusStore((state) => state.setStatus);
+  const clearStatus = useNoteStatusStore((state) => state.clearStatus);
+
+  useEffect(() => {
+    if (status === "saved") {
+      const timer = window.setTimeout(() => {
+        clearStatus(dateKey, line);
+      }, 1000);
+
+      return () => window.clearTimeout(timer);
+    }
+  }, [status, dateKey, line, clearStatus]);
 
   return (
-    <input
-      type="text"
-      className="writing-line"
-      defaultValue={note?.text ?? ""}
-      onChange={(event) => {
-        const text = event.target.value;
-        setNote(dateKey, line, text);
+    <span className="writing-line-wrapper">
+      <input
+        type="text"
+        className="writing-line"
+        defaultValue={note?.text ?? ""}
+        onChange={(event) => {
+          const text = event.target.value;
+          setNote(dateKey, line, text);
 
-        syncNoteToDatabase(dateKey, line, text);
-      }}
-      onBlur={(event) => {
-        const text = event.target.value;
+          syncNoteToDatabase(dateKey, line, text);
+        }}
+        onBlur={(event) => {
+          const text = event.target.value;
 
-        syncNoteToDatabase.cancel();
+          syncNoteToDatabase.cancel();
+          setStatus(dateKey, line, "saving");
 
-        if (text.trim()) {
-          saveNote(dateKey, line, text).catch((error) => {
-            console.error("Не вдалося зберегти запис:", error);
-            toast.error(notesT.saveFailed);
-          });
-        } else {
-          deleteNote(dateKey, line).catch((error) => {
-            console.error("Не вдалося видалити запис:", error);
-            toast.error(notesT.deleteFailed);
-          });
-        }
-      }}
-    />
+          if (text.trim()) {
+            saveNote(dateKey, line, text)
+              .then(() => setStatus(dateKey, line, "saved"))
+              .catch((error) => {
+                console.error("Не вдалося зберегти запис:", error);
+                toast.error(notesT.saveFailed);
+                setStatus(dateKey, line, "failed");
+              });
+          } else {
+            deleteNote(dateKey, line)
+              .then(() => setStatus(dateKey, line, "saved"))
+              .catch((error) => {
+                console.error("Не вдалося видалити запис:", error);
+                toast.error(notesT.deleteFailed);
+                setStatus(dateKey, line, "failed");
+              });
+          }
+        }}
+      />
+      {status && <span className={`note-status note-status-${status}`} />}
+    </span>
   );
 }
 
@@ -189,22 +216,27 @@ export default function Home() {
     };
   }, [isLoadingNotes]);
 
+  const setStatus = useNoteStatusStore((state) => state.setStatus);
+
   const syncNoteToDatabase = useDebouncedCallback(
     async (day: string, line: number, text: string) => {
+      setStatus(day, line, "saving");
+
       try {
         if (text.trim()) {
           await saveNote(day, line, text);
         } else {
           await deleteNote(day, line);
         }
+        setStatus(day, line, "saved");
       } catch (error) {
         console.error("Не вдалося синхронізувати запис:", error);
         toast.error(text.trim() ? notesT.saveFailed : notesT.deleteFailed);
+        setStatus(day, line, "failed");
       }
     },
     500,
   );
-
   if (isLoadingNotes) {
     return (
       <main className="notebook notebook-loading">

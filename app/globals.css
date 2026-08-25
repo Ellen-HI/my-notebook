@@ -472,9 +472,41 @@ html.dark .google-button {
   opacity: 1;
 }
 
+/* ---------------------forgot-password-link--------------------- */
 .forgot-password-link {
   text-align: right;
 }
+
+/* ----------------------note-status---------------------------- */
+
+.writing-line-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.note-status {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.note-status-saving {
+  background-color: #f0ad4e;
+}
+
+.note-status-saved {
+  background-color: #5cb85c;
+}
+
+.note-status-failed {
+  background-color: #d9534f;
+}
+
 /* --------------------tablet---------------- */
 
 @media (min-width: 768px) {
