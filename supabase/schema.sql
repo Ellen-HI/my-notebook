@@ -12,7 +12,7 @@ CREATE TABLE public.notes (
 );
 
 ALTER TABLE public.notes ENABLE ROW LEVEL SECURITY;
-
+CREATE UNIQUE INDEX notes_user_day_line_unique ON public.notes USING btree (user_id, day, line);
 create policy "Users can create their own notes"
 on "public"."notes"
 as permissive
