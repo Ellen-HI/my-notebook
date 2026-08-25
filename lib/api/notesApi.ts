@@ -79,9 +79,9 @@ function queueSave(day: string, line: number, text: string) {
 
 export async function saveNote(day: string, line: number, text: string) {
   const supabase = createClient();
-  const user_id = await getUserId(supabase);
 
   try {
+    const user_id = await getUserId(supabase);
     const { data, error } = await supabase
       .from("notes")
       .upsert({ user_id, day, line, text }, { onConflict: "user_id,day,line" })
@@ -113,12 +113,19 @@ export async function syncPendingSaves(): Promise<void> {
       const supabase = createClient();
       const user_id = await getUserId(supabase);
 
-      const { error } = await supabase
-        .from("notes")
-        .upsert(
-          { user_id, day: save.day, line: save.line, text: save.text },
-          { onConflict: "user_id,day,line" },
-        );
+      const { error } = save.text.trim()
+        ? await supabase
+            .from("notes")
+            .upsert(
+              { user_id, day: save.day, line: save.line, text: save.text },
+              { onConflict: "user_id,day,line" },
+            )
+        : await supabase
+            .from("notes")
+            .delete()
+            .eq("user_id", user_id)
+            .eq("day", save.day)
+            .eq("line", save.line);
 
       if (error) {
         remaining.push(save);
@@ -133,16 +140,24 @@ export async function syncPendingSaves(): Promise<void> {
 
 export async function deleteNote(day: string, line: number) {
   const supabase = createClient();
-  const user_id = await getUserId(supabase);
 
-  const { error } = await supabase
-    .from("notes")
-    .delete()
-    .eq("user_id", user_id)
-    .eq("day", day)
-    .eq("line", line);
+  try {
+    const user_id = await getUserId(supabase);
+    const { error } = await supabase
+      .from("notes")
+      .delete()
+      .eq("user_id", user_id)
+      .eq("day", day)
+      .eq("line", line);
 
-  if (error) {
-    throw new Error(error.message);
+    if (error) {
+      throw new Error(error.message);
+    }
+  } catch (err) {
+    if (!navigator.onLine) {
+      queueSave(day, line, "");
+      return;
+    }
+    throw err;
   }
 }

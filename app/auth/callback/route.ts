@@ -6,6 +6,7 @@ export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
 
   const code = searchParams.get("code");
+  const next = searchParams.get("next");
 
   if (code) {
     const cookieStore = await cookies();
@@ -34,6 +35,10 @@ export async function GET(request: Request) {
         `${origin}/sign-in?error=confirmation_failed`,
       );
     }
+  }
+
+  if (next === "/reset-password") {
+    return NextResponse.redirect(`${origin}/reset-password`);
   }
 
   return NextResponse.redirect(`${origin}/`);

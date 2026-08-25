@@ -86,6 +86,9 @@ export default function SignInForm() {
           required
           disabled={isLoading || isGoogleLoading}
         />
+        <p className="forgot-password-link">
+          <Link href="/forgot-password">{t.forgotPassword}</Link>
+        </p>
         <button
           className="auth-button"
           type="submit"
@@ -102,6 +105,7 @@ export default function SignInForm() {
           {isGoogleLoading ? <Loader /> : t.signInWithGoogle}
         </button>
       </form>
+
       <p className="auth-switch">
         {language === "uk" ? "Немає акаунта?" : "Don't have an account?"}{" "}
         <Link href="/sign-up">{t.toSignUp}</Link>

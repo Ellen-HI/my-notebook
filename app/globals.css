@@ -472,6 +472,9 @@ html.dark .google-button {
   opacity: 1;
 }
 
+.forgot-password-link {
+  text-align: right;
+}
 /* --------------------tablet---------------- */
 
 @media (min-width: 768px) {
