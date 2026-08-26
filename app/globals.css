@@ -114,7 +114,7 @@ html.dark .day:nth-child(4) {
 .day h1 {
   text-align: center;
 
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   letter-spacing: 1.5px;
 }
@@ -123,7 +123,7 @@ html.dark .day:nth-child(4) {
   margin-top: 3px;
   text-align: center;
 
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .writing-lines {
@@ -139,7 +139,7 @@ html.dark .day:nth-child(4) {
   background: transparent;
   color: var(--text);
   font-family: inherit;
-  font-size: 18px;
+  font-size: 20px;
   height: 22px;
   padding: 2px 4px;
 }
@@ -190,7 +190,6 @@ html.dark .notebook {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* border: 1.5px solid var(--text); */
   border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
 }
 
@@ -261,7 +260,7 @@ button.logout-button {
   width: auto;
   height: 40px;
   padding: 0 5px;
-  font-size: 18px;
+  font-size: 20px;
   background: transparent;
   color: var(--text);
   border-color: var(--paper-line);
