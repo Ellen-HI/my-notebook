@@ -111,6 +111,19 @@ function NoteInput({
 
           syncNoteToDatabase(dateKey, line, text);
         }}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+
+            const inputs = Array.from(
+              document.querySelectorAll<HTMLInputElement>(".writing-line"),
+            );
+            const currentIndex = inputs.indexOf(event.currentTarget);
+            const nextInput = inputs[currentIndex + 1];
+
+            nextInput?.focus();
+          }
+        }}
         onBlur={(event) => {
           const text = event.target.value;
 
