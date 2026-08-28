@@ -311,7 +311,7 @@ export default function Home() {
         showCover={false}
         usePortrait={true}
         autoSize={true}
-        mobileScrollSupport={false}
+        mobileScrollSupport={true}
         clickEventForward={false}
         useMouseEvents={false}
         swipeDistance={18}
