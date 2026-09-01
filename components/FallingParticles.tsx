@@ -25,7 +25,7 @@ function generateParticles(count: number): Particle[] {
     startOffset: Math.random() * 150,
     delay: Math.random() * 1.5,
     duration: 3 + Math.random() * 2.5,
-    size: 16 + Math.random() * 40,
+    size: 18 + Math.random() * 80,
     drift: Math.random() * 60 - 40,
   }));
 }
