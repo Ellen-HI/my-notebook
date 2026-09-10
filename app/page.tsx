@@ -20,7 +20,6 @@ import {
   selectNoteStatus,
   useNoteStatusStore,
 } from "@/lib/store/noteStatusStore";
-import FallingParticles from "@/components/FallingParticles";
 
 const getWeek = (weekOffset: number) => {
   const today = new Date();
@@ -263,7 +262,6 @@ export default function Home() {
 
   return (
     <main className="notebook" ref={notebookRef}>
-      <FallingParticles emoji="🍂" />
       <div className="top-controls">
         <ThemeSwitcher />
         <div className="flip-controls">

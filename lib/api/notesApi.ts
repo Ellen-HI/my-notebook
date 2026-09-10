@@ -1,5 +1,14 @@
 import { createClient } from "@/lib/supabase/client";
 
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      window.setTimeout(() => reject(new Error("Request timed out")), ms),
+    ),
+  ]);
+}
+
 export type Note = {
   id: number;
   user_id: string;
@@ -32,14 +41,18 @@ export function clearUserIdCache() {
 
 export async function fetchNotes() {
   const supabase = createClient();
-  const user_id = await getUserId(supabase);
+  const user_id = await withTimeout(getUserId(supabase), 5000);
 
-  const { data, error } = await supabase
-    .from("notes")
-    .select("*")
-    .eq("user_id", user_id)
-    .order("day")
-    .order("line");
+  const { data, error } = await withTimeout(
+    (async () =>
+      supabase
+        .from("notes")
+        .select("*")
+        .eq("user_id", user_id)
+        .order("day")
+        .order("line"))(),
+    5000,
+  );
 
   if (error) {
     throw new Error(error.message);

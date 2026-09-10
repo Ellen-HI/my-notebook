@@ -506,33 +506,6 @@ html.dark .google-button {
   background-color: #d9534f;
 }
 
-/* --------------------------falling----------------------- */
-
-.falling-particles {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-  z-index: 100;
-}
-
-.falling-particle {
-  position: absolute;
-  animation: fall linear forwards;
-  opacity: 0.85;
-}
-
-@keyframes fall {
-  0% {
-    transform: translateY(0) translateX(0) rotate(0deg);
-    opacity: 0.85;
-  }
-  100% {
-    transform: translateY(150vh) translateX(var(--drift)) rotate(360deg);
-    opacity: 0.4;
-  }
-}
-
 /* --------------------tablet---------------- */
 
 @media (min-width: 768px) {
